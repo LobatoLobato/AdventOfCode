@@ -1,7 +1,7 @@
 //
 // Created by Lobato on 07/12/2023.
 //
-#include "Utils.h"
+#include "utils.h"
 #include <fstream>
 
 std::vector<std::string> readInput(const std::string &fileName) {
