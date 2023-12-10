@@ -23,4 +23,4 @@ RUN cp "$EXE_PATH/input.txt" /AOC
 
 RUN rm -rf CMakeLists.txt build src
 
-CMD ./solution
+CMD echo start && ./solution
