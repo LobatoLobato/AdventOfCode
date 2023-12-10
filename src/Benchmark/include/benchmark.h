@@ -19,6 +19,7 @@ struct BenchmarkInfo {
 
 BenchmarkInfo startBenchmark(const std::string &id);
 
-void endBenchmark(const BenchmarkInfo& benchmarkInfo);
+template<typename T>
+void endBenchmark(const BenchmarkInfo& benchmarkInfo, const T& result);
 
 #endif //ADVENTOFCODE_BENCHMARK_H

@@ -68,31 +68,22 @@ int main() {
   const CubeBag cubeBagMax = {.red = 12, .green = 13, .blue = 14};
   
   BenchmarkInfo benchmarkInfo = startBenchmark("Possible games id sum");
-  size_t sum = std::transform_reduce(
-      lines.begin(), lines.end(),
-      0L, std::plus{},
-      [&](const std::string &line) -> size_t {
-          CubeBag cubeBag = getCubeBagMaxAmounts(line);
-          if (cubeBag.fitsInto(cubeBagMax)) {
-            return stoi(line.substr(5));
-          }
-          return 0;
-      }
-  );
-  std::cout << "Possible games id sum: " << sum << std::endl;
-  endBenchmark(benchmarkInfo);
+  size_t possibleGamesSum = 0;
+  for (const auto &line: lines) {
+    CubeBag cubeBag = getCubeBagMaxAmounts(line);
+    if (cubeBag.fitsInto(cubeBagMax)) {
+      possibleGamesSum += stoi(line.substr(5));
+    }
+  }
+  endBenchmark(benchmarkInfo, possibleGamesSum);
   
   benchmarkInfo = startBenchmark("Minimum required cubes powers sum");
-  size_t powersSum = std::transform_reduce(
-      lines.begin(), lines.end(),
-      0L, std::plus{},
-      [&](const std::string &line) -> size_t {
-          CubeBag cubeBag = getCubeBagMaxAmounts(line);
-          return cubeBag.getPower();
-      }
-  );
-  std::cout <<  "Minimum required cubes powers sum: " << powersSum << std::endl;
-  endBenchmark(benchmarkInfo);
+  size_t powersSum = 0;
+  for (const auto &line: lines) {
+    CubeBag cubeBag = getCubeBagMaxAmounts(line);
+    powersSum += cubeBag.getPower();
+  }
+  endBenchmark(benchmarkInfo, powersSum);
   
   return 0;
 }

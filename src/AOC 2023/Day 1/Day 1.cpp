@@ -63,25 +63,19 @@ int main() {
   
   BenchmarkInfo benchmarkInfo = startBenchmark("Sum without spelled Digits");
   
-  size_t sumWithoutSpelledDigits = std::transform_reduce(
-      lines.begin(), lines.end(),
-      0L, std::plus{},
-      [](const std::string &line) -> size_t { return getCalibrationValue(line); }
-  );
-  std::cout << "Sum (Spelled out digits not included): " << sumWithoutSpelledDigits << std::endl;
-  
-  endBenchmark(benchmarkInfo);
+  size_t sumWithoutSpelledDigits = 0;
+  for (const auto &line: lines) {
+    sumWithoutSpelledDigits += getCalibrationValue(line);
+  }
+  endBenchmark(benchmarkInfo, sumWithoutSpelledDigits);
   
   benchmarkInfo = startBenchmark("Sum with spelled digits");
   
-  size_t sumWithSpelledDigits = std::transform_reduce(
-      lines.begin(), lines.end(),
-      0L, std::plus{},
-      [](const std::string &line) -> size_t { return getCalibrationValue(line, true); }
-  );
-  std::cout << "Sum (Spelled out digits included): " << sumWithSpelledDigits << std::endl;
-  
-  endBenchmark(benchmarkInfo);
+  size_t sumWithSpelledDigits = 0;
+  for (const auto &line: lines) {
+    sumWithSpelledDigits += getCalibrationValue(line, true);
+  }
+  endBenchmark(benchmarkInfo, sumWithSpelledDigits);
   
   return 0;
 }

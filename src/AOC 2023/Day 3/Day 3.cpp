@@ -155,20 +155,18 @@ int main() {
   std::vector<std::string> lines = readInput("input.txt");
   
   BenchmarkInfo benchmarkInfo = startBenchmark("Engine part numbers sum");
-  size_t sum = 0;
+  size_t partNumbersSum = 0;
   for (size_t i = 0; i < lines.size(); i++) {
-    sum += getLinePartNumbersSum(lines, i);
+    partNumbersSum += getLinePartNumbersSum(lines, i);
   }
-  std::cout << "Engine part numbers sum: " << sum << std::endl;
-  endBenchmark(benchmarkInfo);
+  endBenchmark(benchmarkInfo, partNumbersSum);
   
   benchmarkInfo = startBenchmark("Engine gear ratios sum");
   size_t gearRatiosSum = 0;
   for (size_t i = 0; i < lines.size(); i++) {
     gearRatiosSum += getLineGearRatiosSum(lines, i);
   }
-  std::cout << "Engine gear ratios sum: " << gearRatiosSum << std::endl;
-  endBenchmark(benchmarkInfo);
+  endBenchmark(benchmarkInfo, gearRatiosSum);
   
   return 0;
 }
