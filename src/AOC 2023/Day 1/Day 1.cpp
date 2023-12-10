@@ -58,24 +58,27 @@ size_t getCalibrationValue(std::string input, bool includeSpelledDigits = false)
          : 0;
 }
 
+
 int main() {
   std::vector<std::string> lines = readInput("input.txt");
-  
-  BenchmarkInfo benchmarkInfo = startBenchmark("Sum without spelled Digits");
-  
+#if PART1
+  startBenchmark("Sum without spelled Digits");
   size_t sumWithoutSpelledDigits = 0;
   for (const auto &line: lines) {
     sumWithoutSpelledDigits += getCalibrationValue(line);
   }
-  endBenchmark(benchmarkInfo, sumWithoutSpelledDigits);
   
-  benchmarkInfo = startBenchmark("Sum with spelled digits");
-  
+  endBenchmark(sumWithoutSpelledDigits);
+#endif
+
+#if PART2
   size_t sumWithSpelledDigits = 0;
   for (const auto &line: lines) {
     sumWithSpelledDigits += getCalibrationValue(line, true);
   }
-  endBenchmark(benchmarkInfo, sumWithSpelledDigits);
+  
+  endBenchmark(sumWithSpelledDigits);
+#endif
   
   return 0;
 }

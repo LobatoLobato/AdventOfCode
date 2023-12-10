@@ -4,12 +4,23 @@
 #include "benchmark.h"
 #include <iostream>
 
-BenchmarkInfo startBenchmark(const std::string &id) {
-  return {.id = id, .startTime = std::chrono::high_resolution_clock::now()};
+#ifndef NO_OUTPUT
+
+struct BenchmarkInfo {
+    using system_clock = std::chrono::system_clock;
+    using duration = std::chrono::nanoseconds;
+    using time_point = std::chrono::time_point<system_clock, duration>;
+    
+    std::string id;
+    time_point startTime;
+} benchmarkInfo;
+
+void startBenchmark(const std::string &id) {
+  benchmarkInfo = {.id = id, .startTime = std::chrono::high_resolution_clock::now()};
 }
 
 template<typename T>
-void endBenchmark(const BenchmarkInfo &benchmarkInfo, const T &result) {
+void endBenchmark(const T &result) {
   BenchmarkInfo::time_point endTime = std::chrono::high_resolution_clock::now();
   
   std::chrono::duration<double, std::milli> ms_double = endTime - benchmarkInfo.startTime;
@@ -19,6 +30,8 @@ void endBenchmark(const BenchmarkInfo &benchmarkInfo, const T &result) {
   std::cout << "  Result: " << result << "\n\n";
 }
 
-template void endBenchmark<size_t>(const BenchmarkInfo &benchmarkInfo, const size_t &result);
-template void endBenchmark<long long int>(const BenchmarkInfo &benchmarkInfo, const long long int &result);
-template void endBenchmark<std::string>(const BenchmarkInfo &benchmarkInfo, const std::string &result);
+template void endBenchmark<size_t>(const size_t &result);
+template void endBenchmark<long long int>(const long long int &result);
+template void endBenchmark<std::string>(const std::string &result);
+
+#endif

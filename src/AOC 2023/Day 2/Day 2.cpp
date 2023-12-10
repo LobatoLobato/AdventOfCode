@@ -67,7 +67,8 @@ int main() {
   std::vector<std::string> lines = readInput("input.txt");
   const CubeBag cubeBagMax = {.red = 12, .green = 13, .blue = 14};
   
-  BenchmarkInfo benchmarkInfo = startBenchmark("Possible games id sum");
+#if PART1
+  startBenchmark("Possible games id sum");
   size_t possibleGamesSum = 0;
   for (const auto &line: lines) {
     CubeBag cubeBag = getCubeBagMaxAmounts(line);
@@ -75,15 +76,18 @@ int main() {
       possibleGamesSum += stoi(line.substr(5));
     }
   }
-  endBenchmark(benchmarkInfo, possibleGamesSum);
-  
-  benchmarkInfo = startBenchmark("Minimum required cubes powers sum");
+  endBenchmark(possibleGamesSum);
+#endif
+
+#if PART2
+  startBenchmark("Minimum required cubes powers sum");
   size_t powersSum = 0;
   for (const auto &line: lines) {
     CubeBag cubeBag = getCubeBagMaxAmounts(line);
     powersSum += cubeBag.getPower();
   }
-  endBenchmark(benchmarkInfo, powersSum);
+  endBenchmark(powersSum);
+#endif
   
   return 0;
 }

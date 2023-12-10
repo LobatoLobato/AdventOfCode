@@ -154,19 +154,23 @@ size_t getLineGearRatiosSum(const std::vector<std::string> &lines, size_t lineId
 int main() {
   std::vector<std::string> lines = readInput("input.txt");
   
-  BenchmarkInfo benchmarkInfo = startBenchmark("Engine part numbers sum");
+#if PART1
+  startBenchmark("Engine part numbers sum");
   size_t partNumbersSum = 0;
   for (size_t i = 0; i < lines.size(); i++) {
     partNumbersSum += getLinePartNumbersSum(lines, i);
   }
-  endBenchmark(benchmarkInfo, partNumbersSum);
-  
-  benchmarkInfo = startBenchmark("Engine gear ratios sum");
+  endBenchmark(partNumbersSum);
+#endif
+
+#if PART2
+  startBenchmark("Engine gear ratios sum");
   size_t gearRatiosSum = 0;
   for (size_t i = 0; i < lines.size(); i++) {
     gearRatiosSum += getLineGearRatiosSum(lines, i);
   }
-  endBenchmark(benchmarkInfo, gearRatiosSum);
+  endBenchmark(gearRatiosSum);
+#endif
   
   return 0;
 }

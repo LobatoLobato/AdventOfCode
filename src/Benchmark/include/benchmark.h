@@ -5,21 +5,19 @@
 #ifndef ADVENTOFCODE_BENCHMARK_H
 #define ADVENTOFCODE_BENCHMARK_H
 
+#ifdef NO_OUTPUT
+#define startBenchmark(id)
+#define endBenchmark(result)
+#else
+
 #include <chrono>
 #include <string>
 
-struct BenchmarkInfo {
-    using system_clock = std::chrono::system_clock;
-    using duration = std::chrono::nanoseconds;
-    using time_point = std::chrono::time_point<system_clock, duration>;
-    
-    std::string id;
-    time_point startTime;
-};
-
-BenchmarkInfo startBenchmark(const std::string &id);
+void startBenchmark(const std::string &id);
 
 template<typename T>
-void endBenchmark(const BenchmarkInfo& benchmarkInfo, const T& result);
+void endBenchmark(const T& result);
+
+#endif
 
 #endif //ADVENTOFCODE_BENCHMARK_H

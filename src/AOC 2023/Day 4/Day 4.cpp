@@ -66,21 +66,25 @@ size_t getAmountOfCardCopies(const std::vector<std::string> &lines, std::vector<
 
 int main() {
   std::vector<std::string> lines = readInput("input.txt");
-  
-  BenchmarkInfo benchmarkInfo = startBenchmark("Total points");
+
+#if PART1
+  startBenchmark("Total points");
   size_t totalGamePoints = 0;
   for (const auto &line: lines) {
     totalGamePoints += getCardPoints(line);
   }
-  endBenchmark(benchmarkInfo, totalGamePoints);
-  
-  benchmarkInfo = startBenchmark("Total cards");
+  endBenchmark(totalGamePoints);
+#endif
+
+#if PART2
+  startBenchmark("Total cards");
   std::vector<size_t> copies(lines.size(), 1);
   size_t totalCards = 0;
   for (size_t copyIdx = 0; copyIdx < copies.size(); copyIdx++) {
     totalCards += getAmountOfCardCopies(lines, copies, copyIdx);
   }
-  endBenchmark(benchmarkInfo, totalCards);
+  endBenchmark(totalCards);
+#endif
   
   return 0;
 }
