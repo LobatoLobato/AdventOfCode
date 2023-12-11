@@ -4,34 +4,40 @@
 #include "benchmark.h"
 #include <iostream>
 
-#ifndef NO_OUTPUT
-
-struct BenchmarkInfo {
-    using system_clock = std::chrono::system_clock;
-    using duration = std::chrono::nanoseconds;
-    using time_point = std::chrono::time_point<system_clock, duration>;
-    
-    std::string id;
-    time_point startTime;
-} benchmarkInfo;
-
-void startBenchmark(const std::string &id) {
-  benchmarkInfo = {.id = id, .startTime = std::chrono::high_resolution_clock::now()};
-}
-
 template<typename T>
-void endBenchmark(const T &result) {
-  BenchmarkInfo::time_point endTime = std::chrono::high_resolution_clock::now();
+void benchmark(const std::string &id, std::function<T()> target, size_t count) {
+  using system_clock = std::chrono::system_clock;
+  using duration = std::chrono::nanoseconds;
+  using time_point = std::chrono::time_point<system_clock, duration>;
   
-  std::chrono::duration<double, std::milli> ms_double = endTime - benchmarkInfo.startTime;
+  double totalTime = 0, averageTime = 0;
+  time_point startTime, endTime;
+  std::chrono::duration<double, std::milli> execTime;
   
-  std::cout << "\nBenchmark Result [" << benchmarkInfo.id << "]: \n";
-  std::cout << "  Time elapsed: " << ms_double.count() << "ms\n";
+  for (size_t i = 0; i < count; i++) {
+    startTime = std::chrono::high_resolution_clock::now();
+    target();
+    endTime = std::chrono::high_resolution_clock::now();
+    
+    execTime = endTime - startTime;
+    totalTime += execTime.count();
+  }
+  averageTime = totalTime / count;
+
+#ifdef OUTPUT_EXECUTION_TIME_ONLY
+  printf("%f\n", averageTime);
+#else
+  T result = target();
+  std::cout << "\nBenchmark Result [" << id << "]: \n";
+  std::cout << "  Elapsed Time: " << averageTime << "ms\n";
   std::cout << "  Result: " << result << "\n\n";
+#endif
+
 }
 
-template void endBenchmark<size_t>(const size_t &result);
-template void endBenchmark<long long int>(const long long int &result);
-template void endBenchmark<std::string>(const std::string &result);
-
-#endif
+template void benchmark<size_t>(const std::string &id, std::function<size_t()> target, size_t count);
+template void benchmark<long long int>(const std::string &id, std::function<long long int()> target, size_t count);
+template void benchmark<float>(const std::string &id, std::function<float()> target, size_t count);
+template void benchmark<double>(const std::string &id, std::function<double()> target, size_t count);
+template void benchmark<long double>(const std::string &id, std::function<long double()> target, size_t count);
+template void benchmark<std::string>(const std::string &id, std::function<std::string()> target, size_t count);

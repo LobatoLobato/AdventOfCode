@@ -5,19 +5,13 @@
 #ifndef ADVENTOFCODE_BENCHMARK_H
 #define ADVENTOFCODE_BENCHMARK_H
 
-#ifdef NO_OUTPUT
-#define startBenchmark(id)
-#define endBenchmark(result)
-#else
-
 #include <chrono>
 #include <string>
+#include <functional>
 
-void startBenchmark(const std::string &id);
+#define DEFAULT_BENCHMARK_RUN_COUNT 100
 
 template<typename T>
-void endBenchmark(const T& result);
-
-#endif
+void benchmark(const std::string &id, std::function<T()> target, size_t count = DEFAULT_BENCHMARK_RUN_COUNT);
 
 #endif //ADVENTOFCODE_BENCHMARK_H

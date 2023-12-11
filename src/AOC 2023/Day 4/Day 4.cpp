@@ -64,26 +64,29 @@ size_t getAmountOfCardCopies(const std::vector<std::string> &lines, std::vector<
   return copies[originalIdx];
 }
 
-int main() {
+int main(int argc, char *argv[]) {
   std::vector<std::string> lines = readInput("input.txt");
+  size_t benchmarkRunCount = extractCLIArgValue<size_t>("-i", argc, argv).value_or(DEFAULT_BENCHMARK_RUN_COUNT);
 
 #if PART1
-  startBenchmark("Total points");
-  size_t totalGamePoints = 0;
-  for (const auto &line: lines) {
-    totalGamePoints += getCardPoints(line);
-  }
-  endBenchmark(totalGamePoints);
+  benchmark<size_t>("Total points", [&]() -> size_t {
+      size_t totalGamePoints = 0;
+      for (const auto &line: lines) {
+        totalGamePoints += getCardPoints(line);
+      }
+      return totalGamePoints;
+  }, benchmarkRunCount);
 #endif
 
 #if PART2
-  startBenchmark("Total cards");
-  std::vector<size_t> copies(lines.size(), 1);
-  size_t totalCards = 0;
-  for (size_t copyIdx = 0; copyIdx < copies.size(); copyIdx++) {
-    totalCards += getAmountOfCardCopies(lines, copies, copyIdx);
-  }
-  endBenchmark(totalCards);
+  benchmark<size_t>("Total cards", [&]() -> size_t {
+      std::vector<size_t> copies(lines.size(), 1);
+      size_t totalCards = 0;
+      for (size_t copyIdx = 0; copyIdx < copies.size(); copyIdx++) {
+        totalCards += getAmountOfCardCopies(lines, copies, copyIdx);
+      }
+      return totalCards;
+  }, benchmarkRunCount);
 #endif
   
   return 0;
