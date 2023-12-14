@@ -151,31 +151,31 @@ size_t getLineGearRatiosSum(const std::vector<std::string> &lines, size_t lineId
   return gearRatioSum;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char **argv) {
   std::vector<std::string> lines = readInput("input.txt");
-  size_t benchmarkRunCount = extractCLIArgValue<size_t>("-i", argc, argv).value_or(DEFAULT_BENCHMARK_RUN_COUNT);
-  
-#if PART1
-  benchmark<size_t>("Engine part numbers sum", [&]() -> size_t {
+  Benchmarker::initialize(argc, argv);
+
+#ifdef PART1
+  Benchmarker::registerBenchmark<size_t>("Day 3-1", [&]() -> size_t {
       size_t partNumbersSum = 0;
       for (size_t i = 0; i < lines.size(); i++) {
         partNumbersSum += getLinePartNumbersSum(lines, i);
       }
       
       return partNumbersSum;
-  }, benchmarkRunCount);
+  });
 #endif
 
-#if PART2
-  benchmark<size_t>("Engine gear ratios sum", [&]() -> size_t {
+#ifdef PART2
+  Benchmarker::registerBenchmark<size_t>("Day 3-2", [&]() -> size_t {
       size_t gearRatiosSum = 0;
       for (size_t i = 0; i < lines.size(); i++) {
         gearRatiosSum += getLineGearRatiosSum(lines, i);
       }
       
       return gearRatiosSum;
-  }, benchmarkRunCount);
+  });
 #endif
   
-  return 0;
+  return Benchmarker::run();
 }

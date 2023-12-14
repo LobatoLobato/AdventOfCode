@@ -66,28 +66,28 @@ size_t getAmountOfCardCopies(const std::vector<std::string> &lines, std::vector<
 
 int main(int argc, char *argv[]) {
   std::vector<std::string> lines = readInput("input.txt");
-  size_t benchmarkRunCount = extractCLIArgValue<size_t>("-i", argc, argv).value_or(DEFAULT_BENCHMARK_RUN_COUNT);
+  Benchmarker::initialize(argc, argv);
 
-#if PART1
-  benchmark<size_t>("Total points", [&]() -> size_t {
+#ifdef PART1
+  Benchmarker::registerBenchmark<size_t>("Day 4-1", [&]() -> size_t {
       size_t totalGamePoints = 0;
       for (const auto &line: lines) {
         totalGamePoints += getCardPoints(line);
       }
       return totalGamePoints;
-  }, benchmarkRunCount);
+  });
 #endif
 
-#if PART2
-  benchmark<size_t>("Total cards", [&]() -> size_t {
+#ifdef PART2
+  Benchmarker::registerBenchmark<size_t>("Day 4-2", [&]() -> size_t {
       std::vector<size_t> copies(lines.size(), 1);
       size_t totalCards = 0;
       for (size_t copyIdx = 0; copyIdx < copies.size(); copyIdx++) {
         totalCards += getAmountOfCardCopies(lines, copies, copyIdx);
       }
       return totalCards;
-  }, benchmarkRunCount);
+  });
 #endif
   
-  return 0;
+  return Benchmarker::run();
 }

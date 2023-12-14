@@ -3,8 +3,8 @@ project(AdventOfCode)
 
 set(CMAKE_CXX_STANDARD 23)
 
-if (OUTPUT_EXECUTION_TIME_ONLY)
-    add_compile_definitions(OUTPUT_EXECUTION_TIME_ONLY)
+if (BENCHMARK_ONLY)
+    add_compile_definitions(BENCHMARK_ONLY)
 endif ()
 if (PART1)
     add_compile_definitions(PART1)

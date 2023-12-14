@@ -63,14 +63,14 @@ CubeBag getCubeBagMaxAmounts(const std::string &input) {
   return {.red = cubeBag["red"], .green = cubeBag["green"], .blue = cubeBag["blue"]};
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char **argv) {
   std::vector<std::string> lines = readInput("input.txt");
-  size_t benchmarkRunCount = extractCLIArgValue<size_t>("-i", argc, argv).value_or(DEFAULT_BENCHMARK_RUN_COUNT);
-  
   const CubeBag cubeBagMax = {.red = 12, .green = 13, .blue = 14};
+  
+  Benchmarker::initialize(argc, argv);
 
-#if PART1
-  benchmark<size_t>("Possible games id sum", [&]() -> size_t {
+#ifdef PART1
+  Benchmarker::registerBenchmark<size_t>("Day 2-1", [&]() -> size_t {
       size_t possibleGamesSum = 0;
       for (const auto &line: lines) {
         CubeBag cubeBag = getCubeBagMaxAmounts(line);
@@ -80,19 +80,19 @@ int main(int argc, char *argv[]) {
       }
       
       return possibleGamesSum;
-  }, benchmarkRunCount);
+  });
 #endif
 
-#if PART2
-  benchmark<size_t>("Minimum required cubes powers sum", [&]() -> size_t {
+#ifdef PART2
+  Benchmarker::registerBenchmark<size_t>("Day 2-2", [&]() -> size_t {
       size_t powersSum = 0;
       for (const auto &line: lines) {
         CubeBag cubeBag = getCubeBagMaxAmounts(line);
         powersSum += cubeBag.getPower();
       }
       return powersSum;
-  }, benchmarkRunCount);
+  });
 #endif
   
-  return 0;
+  return Benchmarker::run();
 }

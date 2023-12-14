@@ -17,11 +17,4 @@ void readInput(const std::string &fileName, const std::function<void(const std::
 
 std::string replaceAll(std::string str, const std::string &from, const std::string &to);
 
-
-template<typename T>
-std::optional<T> extractCLIArgValue(const char *arg, int argc, char *argv[]);
-
-template<>
-std::optional<const char *> extractCLIArgValue(const char *arg, int argc, char *argv[]);
-
 #endif //ADVENTOFCODE_INPUTREADER_H

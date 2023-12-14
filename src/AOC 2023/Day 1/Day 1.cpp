@@ -3,15 +3,12 @@
 //
 
 #include <string>
-#include <iostream>
-#include <numeric>
 #include <vector>
 #include <unordered_map>
-#include <chrono>
 
 #include "utils.h"
-#include "benchmark.h"
 #include "aho_corasick.hpp"
+#include "benchmark.h"
 
 
 size_t getCalibrationValue(std::string input, bool includeSpelledDigits = false) {
@@ -59,31 +56,62 @@ size_t getCalibrationValue(std::string input, bool includeSpelledDigits = false)
 }
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char **argv) {
   std::vector<std::string> lines = readInput("input.txt");
-  size_t benchmarkRunCount = extractCLIArgValue<size_t>("-i", argc, argv).value_or(DEFAULT_BENCHMARK_RUN_COUNT);
-
-#if PART1
-  benchmark<size_t>("Sum without spelled Digits", [&]() -> size_t {
+  Benchmarker::initialize(argc, argv);
+  
+#ifdef PART1
+  Benchmarker::registerBenchmark<size_t>("Day 1-1", [&]() -> size_t {
       size_t sumWithoutSpelledDigits = 0;
       for (const auto &line: lines) {
         sumWithoutSpelledDigits += getCalibrationValue(line);
       }
       
       return sumWithoutSpelledDigits;
-  }, benchmarkRunCount);
+  });
 #endif
 
-#if PART2
-  benchmark<size_t>("Sum with spelled Digits", [&]() -> size_t {
+#ifdef PART2
+  Benchmarker::registerBenchmark<size_t>("Day 1-2", [&]() -> size_t {
       size_t sumWithSpelledDigits = 0;
       for (const auto &line: lines) {
         sumWithSpelledDigits += getCalibrationValue(line, true);
       }
       
       return sumWithSpelledDigits;
-  }, benchmarkRunCount);
+  });
 #endif
   
-  return 0;
+  return Benchmarker::run();
 }
+
+//
+//#if PART1
+//
+//
+//
+//static void BM_Part1(benchmark::State &state) {
+//  for (auto _: state) {
+//    benchmark::DoNotOptimize(part1());
+//  }
+//  printf("bunda");
+//}
+//
+//REGISTER_BENCHMARK(BM_Part1);
+//
+//
+//#endif
+//
+//#if PART2
+//
+//
+//
+//
+//static void BM_Part2(benchmark::State &state) {
+//  for (auto _: state) benchmark::DoNotOptimize(part2());
+//}
+//
+//
+//REGISTER_BENCHMARK(BM_Part2);
+//#endif
+//

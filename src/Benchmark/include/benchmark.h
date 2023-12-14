@@ -5,13 +5,38 @@
 #ifndef ADVENTOFCODE_BENCHMARK_H
 #define ADVENTOFCODE_BENCHMARK_H
 
-#include <chrono>
-#include <string>
 #include <functional>
+#include <map>
+#include <benchmark/benchmark.h>
 
-#define DEFAULT_BENCHMARK_RUN_COUNT 100
+class Benchmarker {
+public:
+    Benchmarker() = delete;
+    
+    static void initialize(int argc, char **argv);
+    
+    template<class T>
+    static void registerBenchmark(const std::string &id, std::function<T()> target);
+    
+    static int run(benchmark::TimeUnit timeUnit = benchmark::kMillisecond);
 
-template<typename T>
-void benchmark(const std::string &id, std::function<T()> target, size_t count = DEFAULT_BENCHMARK_RUN_COUNT);
+
+private:
+    static class CustomBenchmarkReporter : public ::benchmark::ConsoleReporter {
+        bool ReportContext(const Context &context) override { return true; };
+
+#ifdef BENCHMARK_ONLY
+        void ReportRuns(const std::vector<Run> &report) override {
+          for (auto &run: report) {
+            if (run.aggregate_name == "mean") printf("%f\n", run.GetAdjustedRealTime());
+          }
+        }
+#endif
+    } customReporter;
+    
+    static std::map<std::string, std::string> benchmarkedFunctionResultMap;
+    
+    static void printFunctionsResults();
+};
 
 #endif //ADVENTOFCODE_BENCHMARK_H

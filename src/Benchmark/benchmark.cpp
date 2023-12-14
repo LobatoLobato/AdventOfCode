@@ -2,42 +2,87 @@
 // Created by Lobato on 08/12/2023.
 //
 #include "benchmark.h"
-#include <iostream>
+#include <benchmark/benchmark.h>
+#include "colorprintf.h"
 
-template<typename T>
-void benchmark(const std::string &id, std::function<T()> target, size_t count) {
-  using system_clock = std::chrono::system_clock;
-  using duration = std::chrono::nanoseconds;
-  using time_point = std::chrono::time_point<system_clock, duration>;
-  
-  double totalTime = 0, averageTime = 0;
-  time_point startTime, endTime;
-  std::chrono::duration<double, std::milli> execTime;
-  
-  for (size_t i = 0; i < count; i++) {
-    startTime = std::chrono::high_resolution_clock::now();
-    target();
-    endTime = std::chrono::high_resolution_clock::now();
-    
-    execTime = endTime - startTime;
-    totalTime += execTime.count();
+std::map<std::string, std::string> Benchmarker::benchmarkedFunctionResultMap{};
+Benchmarker::CustomBenchmarkReporter Benchmarker::customReporter{};
+
+void Benchmarker::initialize(int argc, char **argv) {
+  static char arg0Default[] = "benchmark";
+  static char *argvDefault = arg0Default;
+  if (!argv) {
+    argv = &argvDefault;
+    argc = 1;
   }
-  averageTime = totalTime / count;
-
-#ifdef OUTPUT_EXECUTION_TIME_ONLY
-  printf("%f\n", averageTime);
-#else
-  T result = target();
-  std::cout << "\nBenchmark Result [" << id << "]: \n";
-  std::cout << "  Elapsed Time: " << averageTime << "ms\n";
-  std::cout << "  Result: " << result << "\n\n";
-#endif
-
+  if (benchmark::ReportUnrecognizedArguments(argc, argv)) exit(1);
+  benchmark::Initialize(&argc, argv);
+  
 }
 
-template void benchmark<size_t>(const std::string &id, std::function<size_t()> target, size_t count);
-template void benchmark<long long int>(const std::string &id, std::function<long long int()> target, size_t count);
-template void benchmark<float>(const std::string &id, std::function<float()> target, size_t count);
-template void benchmark<double>(const std::string &id, std::function<double()> target, size_t count);
-template void benchmark<long double>(const std::string &id, std::function<long double()> target, size_t count);
-template void benchmark<std::string>(const std::string &id, std::function<std::string()> target, size_t count);
+int Benchmarker::run(benchmark::TimeUnit timeUnit) {
+  if (benchmarkedFunctionResultMap.empty()) return 1;
+  benchmark::SetDefaultTimeUnit(timeUnit);
+
+#ifdef BENCHMARK_ONLY
+  benchmark::RunSpecifiedBenchmarks(&customReporter);
+  benchmark::Shutdown();
+#else
+  benchmark::RunSpecifiedBenchmarks(&customReporter);
+  
+  printFunctionsResults();
+  
+  benchmark::Shutdown();
+#endif
+  return 0;
+}
+
+void Benchmarker::printFunctionsResults() {
+  printf("----------------------------------------------------\n");
+  for (const auto &[id, result]: benchmarkedFunctionResultMap) {
+    colorprintf(1, "%s ()", id.c_str());
+    colorprintf(3, " => ");
+    colorprintf(2, "%s\n", result.c_str());
+  }
+  printf("----------------------------------------------------\n");
+}
+
+template<class T>
+void Benchmarker::registerBenchmark(const std::string &id, std::function<T()> target) {
+#ifdef BENCHMARK_ONLY
+  benchmark::RegisterBenchmark(id, [&](benchmark::State &state) -> void {
+      for (auto _: state) benchmark::DoNotOptimize(target());
+  })->Repetitions(10);
+#else
+  benchmark::RegisterBenchmark(id, [&](benchmark::State &state) -> void {
+      for (auto _: state) benchmark::DoNotOptimize(target());
+    
+  })->Complexity();
+#endif
+  benchmarkedFunctionResultMap.insert_or_assign(id, std::to_string(target()));
+}
+
+template<>
+void Benchmarker::registerBenchmark(const std::string &id, std::function<std::string()> target) {
+#ifdef BENCHMARK_ONLY
+  benchmark::RegisterBenchmark(id, [&](benchmark::State &state) -> void {
+      for (auto _: state) benchmark::DoNotOptimize(target());
+  })->Repetitions(10);
+#else
+  benchmark::RegisterBenchmark(id, [&](benchmark::State &state) -> void {
+      for (auto _: state) benchmark::DoNotOptimize(target());
+    
+  })->Complexity();
+#endif
+  benchmarkedFunctionResultMap.insert_or_assign(id, target());
+}
+
+template void Benchmarker::registerBenchmark<size_t>(const std::string &, std::function<size_t()>);
+
+template void Benchmarker::registerBenchmark<long long int>(const std::string &, std::function<long long int()>);
+
+template void Benchmarker::registerBenchmark<float>(const std::string &, std::function<float()>);
+
+template void Benchmarker::registerBenchmark<double>(const std::string &, std::function<double()>);
+
+template void Benchmarker::registerBenchmark<long double>(const std::string &, std::function<long double()>);
