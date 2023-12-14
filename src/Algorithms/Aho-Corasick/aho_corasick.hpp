@@ -32,6 +32,7 @@
 #include <queue>
 #include <utility>
 #include <vector>
+#include <numeric>
 
 namespace aho_corasick {
 
