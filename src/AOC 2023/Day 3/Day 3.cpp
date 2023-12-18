@@ -152,7 +152,7 @@ size_t getLineGearRatiosSum(const std::vector<std::string> &lines, size_t lineId
 }
 
 int main(int argc, char **argv) {
-  std::vector<std::string> lines = readInput("input.txt");
+  InputLines lines = readInput("input.txt");
   Benchmarker::initialize(argc, argv);
 
 #ifdef PART1

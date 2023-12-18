@@ -64,7 +64,7 @@ CubeBag getCubeBagMaxAmounts(const std::string &input) {
 }
 
 int main(int argc, char **argv) {
-  std::vector<std::string> lines = readInput("input.txt");
+  InputLines lines = readInput("input.txt");
   const CubeBag cubeBagMax = {.red = 12, .green = 13, .blue = 14};
   
   Benchmarker::initialize(argc, argv);

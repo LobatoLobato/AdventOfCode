@@ -53,7 +53,7 @@ size_t getCardPoints(const std::string &line) {
   return std::pow(2, winningCardsAmount - 1);
 }
 
-size_t getAmountOfCardCopies(const std::vector<std::string> &lines, std::vector<size_t> &copies, size_t originalIdx) {
+size_t getAmountOfCardCopies(const InputLines &lines, std::vector<size_t> &copies, size_t originalIdx) {
   size_t winningCardsAmount = getWinningCardsAmount(lines[originalIdx]);
   size_t copyIdxStart = originalIdx + 1, copyIdxEnd = copyIdxStart + winningCardsAmount;
   
@@ -65,7 +65,7 @@ size_t getAmountOfCardCopies(const std::vector<std::string> &lines, std::vector<
 }
 
 int main(int argc, char *argv[]) {
-  std::vector<std::string> lines = readInput("input.txt");
+  InputLines lines = readInput("input.txt");
   Benchmarker::initialize(argc, argv);
 
 #ifdef PART1

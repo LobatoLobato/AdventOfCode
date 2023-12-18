@@ -57,7 +57,7 @@ size_t getCalibrationValue(std::string input, bool includeSpelledDigits = false)
 
 
 int main(int argc, char **argv) {
-  std::vector<std::string> lines = readInput("input.txt");
+  InputLines lines = readInput("input.txt");
   Benchmarker::initialize(argc, argv);
   
 #ifdef PART1
@@ -84,34 +84,3 @@ int main(int argc, char **argv) {
   
   return Benchmarker::run();
 }
-
-//
-//#if PART1
-//
-//
-//
-//static void BM_Part1(benchmark::State &state) {
-//  for (auto _: state) {
-//    benchmark::DoNotOptimize(part1());
-//  }
-//  printf("bunda");
-//}
-//
-//REGISTER_BENCHMARK(BM_Part1);
-//
-//
-//#endif
-//
-//#if PART2
-//
-//
-//
-//
-//static void BM_Part2(benchmark::State &state) {
-//  for (auto _: state) benchmark::DoNotOptimize(part2());
-//}
-//
-//
-//REGISTER_BENCHMARK(BM_Part2);
-//#endif
-//
