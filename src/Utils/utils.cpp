@@ -3,7 +3,6 @@
 //
 #include "utils.h"
 #include <fstream>
-#include <cstring>
 
 std::vector<std::string> readInput(const std::string &fileName) {
   std::ifstream file(fileName);
