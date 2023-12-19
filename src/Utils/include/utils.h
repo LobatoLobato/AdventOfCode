@@ -2,8 +2,8 @@
 // Created by Lobato on 07/12/2023.
 //
 
-#ifndef ADVENTOFCODE_INPUTREADER_H
-#define ADVENTOFCODE_INPUTREADER_H
+#ifndef ADVENTOFCODE_UTILS_H
+#define ADVENTOFCODE_UTILS_H
 
 #include <vector>
 #include <string>
@@ -11,6 +11,7 @@
 #include <optional>
 #include <iostream>
 #include <sstream>
+#include <iterator>
 
 using InputLines = std::vector<std::string>;
 
@@ -59,4 +60,9 @@ TOut reduce(
   return output;
 }
 
-#endif //ADVENTOFCODE_INPUTREADER_H
+template<typename T>
+std::vector<T> istreamToVector(std::istringstream &sstream) {
+  return std::vector<T>{std::istream_iterator<T>{sstream}, std::istream_iterator<T>()};
+}
+
+#endif //ADVENTOFCODE_UTILS_H
