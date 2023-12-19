@@ -8,3 +8,4 @@ Repository with solutions to Advent Of Code's events.
 - [Day 6](src/AOC%202023/Day%206)
 - [Day 7](src/AOC%202023/Day%207)
 - [Day 8](src/AOC%202023/Day%208)
+- - [Day 9](src/AOC%202023/Day%209)
